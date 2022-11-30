@@ -32,7 +32,9 @@ rm hosts*
 wget https://raw.githubusercontent.com/AdAway/adaway.github.io/master/hosts.txt
 prefix="127.0.0.1 "
 while IFS= read -r line; do
-    [[ "$line" =~ "$prefix" ]] && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+    if [[ "$line" != *localhost* ]]; then
+        [[ "$line" =~ "$prefix" ]] && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+    fi
 done < hosts.txt
 
 # Windows spyware
@@ -62,8 +64,8 @@ rm Easyprivacy*
 wget https://v.firebog.net/hosts/Easyprivacy.txt
 dos2unix -n Easyprivacy.txt Easyprivacy_unix.txt
 while IFS= read -r line; do
-    if [ "$line" != "" ] && [ "$line" != "#"* ]; then
-        echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+    if [ "$line" != "" ] && [[ "$line" != \#* ]]; then
+        echo "add type=NXDOMAIN name=\"${line}\"" >>adblock_mikrotik.rsc
     fi
 done < Easyprivacy_unix.txt
 
