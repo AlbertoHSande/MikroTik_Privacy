@@ -1,5 +1,6 @@
-<img src="https://img.shields.io/static/v1?label=number+of+entries&message=33330&color=green?style=plastic&logo=appveyor" />
-# MikroTik_Privacy
+<img src="https://img.shields.io/static/v1?label=number+of+entries&message=33330&color=green?style=plastic&logo=appveyor" />  
+
+# MikroTik_Privacy  
 This script builds an updated RouterOS script that adds various block lists as dns static to NXDOMAIN.  
 
 You must run the script manually from time to time in order to update them.
