@@ -7,10 +7,10 @@ You must run the script manually from time to time in order to update them.
 
 ## Install
 
-You can install and update the list without running locally the shell script if you trust this source.
-Execute in the MikroTik router:
-/tool fetch url=https://raw.githubusercontent.com/AlbertoHSande/MikroTik_Privacy/main/adblock_mikrotik.rsc
-/import file-name=adblock_mikrotik.rsc
+You can install and update the list without running locally the shell script if you trust this source.  
+Execute in the MikroTik router:  
+/tool fetch url=https://raw.githubusercontent.com/AlbertoHSande/MikroTik_Privacy/main/adblock_mikrotik.rsc  
+/import file-name=adblock_mikrotik.rsc  
 
 ## Sources:
 ### AdAway default blocklist  
