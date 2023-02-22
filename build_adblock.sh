@@ -28,12 +28,14 @@ echo "# AdAway default blocklist
 # Create an issue at https://github.com/AdAway/adaway.github.io/issues
 #">>adblock_mikrotik.rsc
 
+entry_count=0
+
 rm hosts*
 wget https://raw.githubusercontent.com/AdAway/adaway.github.io/master/hosts.txt
 prefix="127.0.0.1 "
 while IFS= read -r line; do
     if [[ "$line" != *localhost* ]]; then
-        [[ "$line" =~ "$prefix" ]] && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+        [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
     fi
 done < hosts.txt
 
@@ -48,7 +50,7 @@ rm spy*
 wget https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
 prefix="0.0.0.0 "
 while IFS= read -r line; do
-    [[ "$line" =~ "$prefix" ]] && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+    [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
 done < spy.txt
 
 # EasyPrivacy
@@ -65,7 +67,7 @@ wget https://v.firebog.net/hosts/Easyprivacy.txt
 dos2unix -n Easyprivacy.txt Easyprivacy_unix.txt
 while IFS= read -r line; do
     if [ "$line" != "" ] && [[ "$line" != \#* ]]; then
-        echo "add type=NXDOMAIN name=\"${line}\"" >>adblock_mikrotik.rsc
+        ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line}\"" >>adblock_mikrotik.rsc
     fi
 done < Easyprivacy_unix.txt
 
@@ -80,5 +82,7 @@ wget https://raw.githubusercontent.com/DandelionSprout/adfilt/master/Alternate%2
 dos2unix -n AntiMalwareHosts.txt AntiMalwareHosts_unix.txt
 prefix="127.0.0.1 "
 while IFS= read -r line; do
-    [[ "$line" =~ "$prefix" ]] && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+    [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
 done < AntiMalwareHosts_unix.txt
+
+echo "# Total entries: \"${entry_count}\"" >>adblock_mikrotik.rsc
