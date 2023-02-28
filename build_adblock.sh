@@ -1,10 +1,10 @@
 #!/bin/bash
 
-rm adblock_mikrotik.rsc
+rm adblock_mikrotik_w_duplicates.rsc
 echo "# Blocking ads at DNS level for MikroTik
 /ip dns static remove [find type=NXDOMAIN]
 # Blocking ads at DNS level for MikroTik
-/ip dns static">>adblock_mikrotik.rsc
+/ip dns static">>adblock_mikrotik_w_duplicates.rsc
 
 # Basic Android ads
 echo "# AdAway default blocklist
@@ -26,7 +26,7 @@ echo "# AdAway default blocklist
 #
 # Contribute:
 # Create an issue at https://github.com/AdAway/adaway.github.io/issues
-#">>adblock_mikrotik.rsc
+#">>adblock_mikrotik_w_duplicates.rsc
 
 entry_count=0
 
@@ -35,7 +35,7 @@ wget https://raw.githubusercontent.com/AdAway/adaway.github.io/master/hosts.txt
 prefix="127.0.0.1 "
 while IFS= read -r line; do
     if [[ "$line" != *localhost* ]]; then
-        [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+        [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik_w_duplicates.rsc
     fi
 done < hosts.txt
 
@@ -44,13 +44,13 @@ echo "### WindowsSpyBlocker - Hosts spy rules
 ### License: MIT
 ### Updated: 2022-05-16T13:25:00Z02:12
 ### Donate: https://github.com/sponsors/crazy-max ; https://www.paypal.me/crazyws
-### More info: https://github.com/crazy-max/WindowsSpyBlocker">>adblock_mikrotik.rsc
+### More info: https://github.com/crazy-max/WindowsSpyBlocker">>adblock_mikrotik_w_duplicates.rsc
 
 rm spy*
 wget https://raw.githubusercontent.com/crazy-max/WindowsSpyBlocker/master/data/hosts/spy.txt
 prefix="0.0.0.0 "
 while IFS= read -r line; do
-    [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+    [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik_w_duplicates.rsc
 done < spy.txt
 
 # EasyPrivacy
@@ -60,14 +60,14 @@ echo "# Easyprivacy, parsed and mirrored by https://firebog.net
 # This is sourced from an "adblock" style list which may contain mistakes in how it is parsed
 # Please bring any such issues up at https://github.com/WaLLy3K/wally3k.github.io/issues
 
-# List corrections can be requested at https://github.com/easylist/easylist#list-issues">>adblock_mikrotik.rsc
+# List corrections can be requested at https://github.com/easylist/easylist#list-issues">>adblock_mikrotik_w_duplicates.rsc
 
 rm Easyprivacy*
 wget https://v.firebog.net/hosts/Easyprivacy.txt
 dos2unix -n Easyprivacy.txt Easyprivacy_unix.txt
 while IFS= read -r line; do
     if [ "$line" != "" ] && [[ "$line" != \#* ]]; then
-        ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line}\"" >>adblock_mikrotik.rsc
+        ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line}\"" >>adblock_mikrotik_w_duplicates.rsc
     fi
 done < Easyprivacy_unix.txt
 
@@ -75,14 +75,15 @@ done < Easyprivacy_unix.txt
 echo "# Title: 💊 Dandelion Sprout's Anti-Malware List («hosts» file version)
 # Version: 23November2022v1
 # Expires: 2 days
-# Description: This list goes the extra kilometer to prevent more malware than other mainstream anti-malware lists. It blocks heavily abused top-level domains (and even search engine results for them), blocks domains used in malware redirection trains and in domain parking schemes, blocks sponsored Windows PUP nags on PC guide articles, uses mass blocking of domains belonging to bad IPs, and has many other subcategories that give it a solid advantage over similar lists out there.">>adblock_mikrotik.rsc
+# Description: This list goes the extra kilometer to prevent more malware than other mainstream anti-malware lists. It blocks heavily abused top-level domains (and even search engine results for them), blocks domains used in malware redirection trains and in domain parking schemes, blocks sponsored Windows PUP nags on PC guide articles, uses mass blocking of domains belonging to bad IPs, and has many other subcategories that give it a solid advantage over similar lists out there.">>adblock_mikrotik_w_duplicates.rsc
 
 rm AntiMalwareHosts*
 wget https://raw.githubusercontent.com/DandelionSprout/adfilt/master/Alternate%20versions%20Anti-Malware%20List/AntiMalwareHosts.txt
 dos2unix -n AntiMalwareHosts.txt AntiMalwareHosts_unix.txt
 prefix="127.0.0.1 "
 while IFS= read -r line; do
-    [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik.rsc
+    [[ "$line" =~ "$prefix" ]] && ((entry_count++)) && echo "add type=NXDOMAIN name=\"${line#"$prefix"}\"" >>adblock_mikrotik_w_duplicates.rsc
 done < AntiMalwareHosts_unix.txt
 
-echo "# Total entries: \"${entry_count}\"" >>adblock_mikrotik.rsc
+echo "# Total processed entries: \"${entry_count}\"" >>adblock_mikrotik_w_duplicates.rsc
+awk '!seen[$0]++' adblock_mikrotik_w_duplicates.rsc > adblock_mikrotik.rsc
